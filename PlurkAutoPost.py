@@ -24,8 +24,11 @@ while 1:
 	if time == timenow:
 		cookies = urllib2.HTTPCookieProcessor()
 		opener = urllib2.build_opener(cookies)
-
-		f = opener.open('http://www.plurk.com/Users/login?nick_name='+ user +'&password='+ passwd +'&login_token=3b1e3413a45932936432354ab3c062f8@n6t3bj&logintoken=1')
+		data = {  "nick_name": user, "password": passwd, "login_token" : "3b1e3413a45932936432354ab3c062f8@n6t3bj", "logintoken" : "1"}
+		request = urllib2.Request(
+		        url     = 'http://www.plurk.com/Users/login',
+		        data    = urllib.urlencode(data))
+		f = opener.open(request)
 
 		data = {  "qualifier": "says", "content": post, "lang" : "tr_ch", "no_comments" : "0", "uid" : "9064266"}
 		request = urllib2.Request(
