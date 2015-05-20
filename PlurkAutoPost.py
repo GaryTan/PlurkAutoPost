@@ -1,43 +1,23 @@
-#encoding: utf-8
+# -*- coding: utf-8 -*-
 
-import urllib2, urllib
-import time
-import getpass
+import requests
 import re
-from datetime import datetime
 
-print "Karma up up up !"
-print "\r"
-user = raw_input("userid: ")
-passwd = getpass.getpass()
-print "\r"
+# user imformation
+# user = ""
+# passwd = ""
+# post = ""
 
-post = raw_input("post message: ")
-print "\r"
+# get user id
+result = requests.get("http://www.plurk.com/{0}".format(user)).text
+userID = re.findall('"user_id": (\w+)', result)[0]
 
-print "Time set "
-print "(format: HH:MM:SS)"
-time = raw_input("Time: ")
-print "\r"
+# login
+data = {"nick_name": user, "password": passwd, "login-token": "b301c75c5261f80d2d5021a05259a4bd@nommw8", "logintoken": 1}
+r = requests.post("https://www.plurk.com/Users/login", data=data)
+p_cookie = r.request.headers["Cookie"]
+header = {"cookie": p_cookie}
 
-res = urllib2.urlopen('http://www.plurk.com/'+user).read()
-re = re.findall('"user_id": (\w+)', res)
-
-while 1:
-	timenow = str(datetime.now())[11:19]
-	if time == timenow:
-		cookies = urllib2.HTTPCookieProcessor()
-		opener = urllib2.build_opener(cookies)
-
-		data = {  "nick_name": user, "password": passwd, "login_token" : "3b1e3413a45932936432354ab3c062f8@n6t3bj", "logintoken" : "1"}
-		request = urllib2.Request(
-			url     = 'http://www.plurk.com/Users/login',
-			data    = urllib.urlencode(data))
-		f = opener.open(request)
-
-		data = {  "qualifier": "says", "content": post, "lang" : "tr_ch", "no_comments" : "0", "uid" : re[0]}
-		request = urllib2.Request(
-		        url     = 'http://www.plurk.com/TimeLine/addPlurk',
-		        data    = urllib.urlencode(data))
-		opener.open(request)
-		print "Banana Dancing!!"
+# post
+data = {"qualifier": "says", "content": post, "lang" : "tr_ch", "no_comments" : "0", "uid" : userID}
+r = requests.post("https://www.plurk.com/TimeLine/addPlurk", data=data, headers=header)
