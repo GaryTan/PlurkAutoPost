@@ -4,9 +4,9 @@ import requests
 import re
 
 # user imformation
-# user = ""
-# passwd = ""
-# post = ""
+user = "myaccount"
+passwd = "mypassword"
+post = "messages"
 
 # get user id
 result = requests.get("http://www.plurk.com/{0}".format(user)).text
